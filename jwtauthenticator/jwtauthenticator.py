@@ -35,7 +35,9 @@ class JSONWebTokenLoginHandler(BaseHandler):
 
         auth_url = self.authenticator.auth_url
         retpath_param = self.authenticator.retpath_param
-
+        
+        auth_state_claim_fields = self.authenticator.auth_state_claim_fields
+        
         _url = url_path_join(self.hub.server.base_url, 'home')
         next_url = self.get_argument('next', default=False)
         if next_url:
@@ -75,7 +77,9 @@ class JSONWebTokenLoginHandler(BaseHandler):
             return self.auth_failed(auth_url)
 
         username = self.retrieve_username(claims, username_claim_field, extract_username=extract_username)
-        user = await self.auth_to_user({'name': username})
+        auth_state = self.copy_claims_to_auth_state(claims, auth_state_claim_fields)
+        user = await self.auth_to_user({'name': username,
+                                        'auth_state': auth_state})
         self.set_login_cookie(user)
 
         self.redirect(_url)
@@ -108,7 +112,13 @@ class JSONWebTokenLoginHandler(BaseHandler):
             if "@" in username:
                 return username.split("@")[0]
         return username
-
+    
+    @staticmethod
+    def copy_claims_to_auth_state(claims, auth_state_claim_fields):
+        auth_state = {}
+        for field in auth_state_claim_fields:
+            auth_state[field] = claims[field]
+        return auth_state
 
 class JSONWebTokenAuthenticator(Authenticator):
     """
@@ -168,7 +178,12 @@ class JSONWebTokenAuthenticator(Authenticator):
         Set to true to split username_claim_field and take the part before the first `@`
         """
     )
-
+    
+    auth_state_claim_fields = List(
+        default_value=[],
+        config=True,
+        help="""Fields in the claims that should be copied over to auth_state.""")
+    
     expected_audience = Unicode(
         default_value='',
         config=True,

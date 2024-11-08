@@ -117,7 +117,8 @@ class JSONWebTokenLoginHandler(BaseHandler):
     def copy_claims_to_auth_state(claims, auth_state_claim_fields):
         auth_state = {}
         for field in auth_state_claim_fields:
-            auth_state[field] = claims[field]
+            if field in claims:
+                auth_state[field] = claims[field]
         return auth_state
 
 class JSONWebTokenAuthenticator(Authenticator):

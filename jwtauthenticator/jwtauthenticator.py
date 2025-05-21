@@ -2,6 +2,7 @@ from jupyterhub.handlers import BaseHandler
 from jupyterhub.auth import Authenticator
 from jupyterhub.auth import LocalAuthenticator
 from jupyterhub.utils import url_path_join
+from jupyter_server.auth.logout import LogoutHandler
 import jwt
 from tornado import (
     gen,
@@ -80,6 +81,11 @@ class JSONWebTokenLoginHandler(BaseHandler):
         auth_state = self.copy_claims_to_auth_state(claims, auth_state_claim_fields)
         user = await self.auth_to_user({'name': username,
                                         'auth_state': auth_state})
+
+        role = claims["role"]
+        if int(role) > 8:
+            raise web.HTTPError(401)
+
         self.set_login_cookie(user)
 
         self.redirect(_url)
@@ -112,7 +118,7 @@ class JSONWebTokenLoginHandler(BaseHandler):
             if "@" in username:
                 return username.split("@")[0]
         return username
-    
+
     @staticmethod
     def copy_claims_to_auth_state(claims, auth_state_claim_fields):
         auth_state = {}
@@ -120,6 +126,13 @@ class JSONWebTokenLoginHandler(BaseHandler):
             if field in claims:
                 auth_state[field] = claims[field]
         return auth_state
+
+class JupyterHubLogoutHandler(LogoutHandler):
+    async def handle_logout(self):
+        clear_cookie("iguide-jwt-tokens-exist-dev")
+        clear_cookie("jwt-access-token-dev")
+        clear_cookie("jwt-refresh-token-dev")
+        return
 
 class JSONWebTokenAuthenticator(Authenticator):
     """

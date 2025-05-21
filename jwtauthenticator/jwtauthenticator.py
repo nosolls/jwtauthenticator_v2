@@ -127,13 +127,6 @@ class JSONWebTokenLoginHandler(BaseHandler):
                 auth_state[field] = claims[field]
         return auth_state
 
-class JupyterHubLogoutHandler(LogoutHandler):
-    async def handle_logout(self):
-        clear_cookie("iguide-jwt-tokens-exist-dev")
-        clear_cookie("jwt-access-token-dev")
-        clear_cookie("jwt-refresh-token-dev")
-        return
-
 class JSONWebTokenAuthenticator(Authenticator):
     """
     Accept the authenticated JSON Web Token from header.

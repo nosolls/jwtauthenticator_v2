@@ -2,7 +2,6 @@ from jupyterhub.handlers import BaseHandler
 from jupyterhub.auth import Authenticator
 from jupyterhub.auth import LocalAuthenticator
 from jupyterhub.utils import url_path_join
-from jupyter_server.auth.logout import LogoutHandler
 import jwt
 from tornado import (
     gen,

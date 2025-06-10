@@ -19,12 +19,10 @@ class JSONWebTokenLoginHandler(BaseHandler):
     async def get(self):
         header_name = self.authenticator.header_name
         cookie_name = self.authenticator.cookie_name
-        refreshcookie_name = self.authenticator.refreshcookie_name
         param_name = self.authenticator.param_name
 
         auth_header_content = self.request.headers.get(header_name, "") if header_name else None
         auth_cookie_content = self.get_cookie(cookie_name, "") if cookie_name else None
-        auth_refreshcookie_content = self.get_cookie(refreshcookie_name, "") if refreshcookie_name else None
         auth_param_content = self.get_argument(param_name, default="") if param_name else None
 
         signing_certificate = self.authenticator.signing_certificate
@@ -114,18 +112,12 @@ class JSONWebTokenLoginHandler(BaseHandler):
 
     @staticmethod
     def retrieve_username(claims, username_claim_field, extract_username):
-        if username_claim_field not in claims:
-            token_refresh = auth_refreshcookie_content
-            claims_refresh = self.verify_jwt_using_secret(token_refresh, secret, algorithms, audience)
-            username = claims_refresh[username_claim_field]
-            return username
-        else:
-            username = claims[username_claim_field]
+        username = claims[username_claim_field]
 #        if extract_username:
 #            if "@" in username:
 #                changed_username = username.replace("@", "-")
 #                return changed_username.split(".")[0]
-            return username
+        return username
 
     @staticmethod
     def copy_claims_to_auth_state(claims, auth_state_claim_fields):
@@ -154,10 +146,6 @@ class JSONWebTokenAuthenticator(Authenticator):
     cookie_name = Unicode(
         config=True,
         help="""The name of the cookie field used to specify the JWT token""")
-    
-    refreshcookie_name = Unicode(
-        config=True,
-        help="""The name of the refresh cookie field used to specify the JWT token""")
 
     param_name = Unicode(
         config=True,

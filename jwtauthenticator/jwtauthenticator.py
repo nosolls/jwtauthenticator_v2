@@ -154,6 +154,10 @@ class JSONWebTokenAuthenticator(Authenticator):
     cookie_name = Unicode(
         config=True,
         help="""The name of the cookie field used to specify the JWT token""")
+    
+    refreshcookie_name = Unicode(
+        config=True,
+        help="""The name of the refresh cookie field used to specify the JWT token""")
 
     param_name = Unicode(
         config=True,

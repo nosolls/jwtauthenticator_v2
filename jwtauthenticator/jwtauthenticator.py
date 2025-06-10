@@ -76,14 +76,14 @@ class JSONWebTokenLoginHandler(BaseHandler):
         except jwt.exceptions.InvalidTokenError:
             return self.auth_failed(auth_url)
 
+        role = claims["role"]
+        if int(role) > 8:
+            raise self.auth_failed(auth_url)
+
         username = self.retrieve_username(claims, username_claim_field, extract_username=extract_username)
         auth_state = self.copy_claims_to_auth_state(claims, auth_state_claim_fields)
         user = await self.auth_to_user({'name': username,
                                         'auth_state': auth_state})
-
-        role = claims["role"]
-        if int(role) > 8:
-            raise web.HTTPError(401)
 
         self.set_login_cookie(user)
 

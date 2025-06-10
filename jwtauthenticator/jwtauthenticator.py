@@ -113,10 +113,10 @@ class JSONWebTokenLoginHandler(BaseHandler):
     @staticmethod
     def retrieve_username(claims, username_claim_field, extract_username):
         username = claims[username_claim_field]
-        if extract_username:
-            if "@" in username:
-                changed_username = username.replace("@", "-")
-                return changed_username.split(".")[0]
+#        if extract_username:
+#            if "@" in username:
+#                changed_username = username.replace("@", "-")
+#                return changed_username.split(".")[0]
         return username
 
     @staticmethod

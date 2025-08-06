@@ -35,7 +35,7 @@ You'll also need to set some configuration options including the location of the
 ```
 # Only one of two following fields must be set.  
 # If both, then "secret" will be the signing method used.
-# The secrect key used to generate the given token
+# The secret key used to generate the given token
 c.JSONWebTokenAuthenticator.secret = '<secret-key>'   
          
 # -OR-

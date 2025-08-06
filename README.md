@@ -11,6 +11,8 @@ cd jwtauthenticator
 pip install -e .
 ```
 
+This is installed in the Jupyterhub's container. Not the singleuser container.
+
 ## Configuration
 
 You should edit your :file:`jupyterhub_config.py` to set the authenticator class, the JSONWebTokenLocalAuthenticator provides features such as local user creation. If you already have local users then you may use the JSONWebTokenAuthenticator authenticator class:

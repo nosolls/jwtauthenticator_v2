@@ -4,13 +4,7 @@ Authenticate to Jupyterhub using a query parameter for the JSONWebToken, or by a
 
 ## Installation
 
-This package can be installed with pip:
-
-```
-pip install jupyterhub-jwtauthenticator-v2
-```
-
-Alternately, you can clone this repository and run:
+You can clone this repository and run:
 
 ```
 cd jwtauthenticator
@@ -67,21 +61,12 @@ c.JSONWebTokenAuthenticator.auth_url = 'https://auth.example.com'
 c.JSONWebTokenAuthenticator.retpath_param = 'retpath' 
 
 # Header name to retrieve JWT token
-c.JSONWebTokenAuthenticator.header_name = 'X-Auth-Token'  
+c.JSONWebTokenAuthenticator.header_name = 'X-Auth-Token'
  
-# Cookie name to retrieve JWT token                      
+# Cookie name to retrieve JWT token
 c.JSONWebTokenAuthenticator.cookie_name = 'auth_token'
 
-# Query param to retrieve JWT token                         
+# Query param to retrieve JWT token
 c.JSONWebTokenAuthenticator.param_name = 'auth_token'
 ```
 
-You should be able to start jupyterhub. :)
-
-## Issues
-
-If you have any issues or bug reports, all are welcome in the issues section. I'll do my best to respond quickly.
-
-## Contribution
-
-If you want to fix the bugs yourself then raise a PR and I'll take a look :)
